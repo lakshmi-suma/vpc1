@@ -55,7 +55,7 @@ resource "ibm_container_vpc_cluster" "testcluster1" {
   kube_version      = "1.25.9"  
   update_all_workers     = true
   wait_for_worker_update = true
-  depends_on = [ ibm_is_subnet.subnet4 ,data.ibm_container_vpc_cluster.cluster ,local.value1,output.ip1]
+  depends_on = [ ibm_is_subnet.subnet4 ,data.ibm_container_vpc_cluster.cluster ,local.value1]
   zones {
     subnet_id = ibm_is_subnet.subnet4.id
     name      = "us-south-1"
