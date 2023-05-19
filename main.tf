@@ -28,41 +28,41 @@ resource "ibm_is_subnet_public_gateway_attachment" "subatt1" {
   # resource_group_name=IaC-dev
 }
 
-data "ibm_container_vpc_cluster" "cluster" {
-  name  = "testcluster1"
-  # depends_on = [ ibm_container_vpc_cluster.cluster ]
-  
-}
-
-data "ibm_container_vpc_cluster_worker" "worker" {
-  for_each= toset(data.ibm_container_vpc_cluster.cluster.workers)
-  worker_id = each.value
-  cluster_name_id = "testcluster1"
-  depends_on = [ data.ibm_container_vpc_cluster.cluster ]
-
-
-}
-
-locals {
-  depends_on = [ data.ibm_container_vpc_cluster_worker.worker ]
-  previous = [
-    for i in data.ibm_container_vpc_cluster.cluster.workers:
-    lookup(lookup(lookup(data.ibm_container_vpc_cluster_worker.worker,i),"network_interfaces")[0],"ip_address")
-    
-  ]
-  
-}
-# Print the id's of the workers
-# locals  {
-#   value1 = data.ibm_container_vpc_cluster.cluster.workers
-#   depends_on = [ data.ibm_container_vpc_cluster.cluster ]
+# data "ibm_container_vpc_cluster" "cluster" {
+#   name  = "testcluster1"
+#   # depends_on = [ ibm_container_vpc_cluster.cluster ]
   
 # }
-output "ip1" {
-  value = local.previous
-  depends_on = [ local.previous ]
+
+# data "ibm_container_vpc_cluster_worker" "worker" {
+#   for_each= toset(data.ibm_container_vpc_cluster.cluster.workers)
+#   worker_id = each.value
+#   cluster_name_id = "testcluster1"
+#   depends_on = [ data.ibm_container_vpc_cluster.cluster ]
+
+
+# }
+
+# locals {
+#   depends_on = [ data.ibm_container_vpc_cluster_worker.worker ]
+#   previous = [
+#     for i in data.ibm_container_vpc_cluster.cluster.workers:
+#     lookup(lookup(lookup(data.ibm_container_vpc_cluster_worker.worker,i),"network_interfaces")[0],"ip_address")
+    
+#   ]
   
-}
+# }
+# # Print the id's of the workers
+# # locals  {
+# #   value1 = data.ibm_container_vpc_cluster.cluster.workers
+# #   depends_on = [ data.ibm_container_vpc_cluster.cluster ]
+  
+# # }
+# output "ip1" {
+#   value = local.previous
+#   depends_on = [ local.previous ]
+  
+# }
 
 
 resource "ibm_container_vpc_cluster" "testcluster1" {
@@ -74,7 +74,8 @@ resource "ibm_container_vpc_cluster" "testcluster1" {
   kube_version      = "1.26.4"  
   update_all_workers     = true
   wait_for_worker_update = true
-  depends_on = [ ibm_is_subnet.subnet4 ,data.ibm_container_vpc_cluster.cluster ,local.previous]
+  depends_on = [ ibm_is_subnet.subnet4]
+  #  ,data.ibm_container_vpc_cluster.cluster ,local.previous]
   zones {
     subnet_id = ibm_is_subnet.subnet4.id
     name      = "us-south-1"
