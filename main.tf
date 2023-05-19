@@ -33,15 +33,34 @@ data "ibm_container_vpc_cluster" "cluster" {
   # depends_on = [ ibm_container_vpc_cluster.cluster ]
   
 }
-# Print the id's of the workers
-locals  {
-  value1 = data.ibm_container_vpc_cluster.cluster.workers
-  depends_on = [ data.ibm_container_vpc_cluster.cluster ]
+
+data "ibm_container_vpc_cluster_worker" "worker" {
+  for_each= toset(data.ibm_container_vpc_cluster.cluster.workers)
+  worker_id = each.value
+  cluster_name_id = "testcluster1"
+  depends_on = [ ibm_container_vpc_cluster.cluster ]
+
+
+}
+
+locals {
+  depends_on = [ data.ibm_container_vpc_cluster_worker.worker ]
+  previous = [
+    for i in data.ibm_container_vpc_cluster.cluster.workers:
+    lookup(lookup(lookup(data.ibm_container_vpc_cluster_worker.worker,i),"network_interfaces")[0],"ip_address")
+    
+  ]
   
 }
+# Print the id's of the workers
+# locals  {
+#   value1 = data.ibm_container_vpc_cluster.cluster.workers
+#   depends_on = [ data.ibm_container_vpc_cluster.cluster ]
+  
+# }
 output "ip1" {
-  value = local.value1
-  depends_on = [ local.value1 ]
+  value = local.previous
+  depends_on = [ local.previous ]
   
 }
 
@@ -52,10 +71,10 @@ resource "ibm_container_vpc_cluster" "testcluster1" {
   flavor            = "bx2.4x16"
   worker_count      = 2
   resource_group_id=var.resource_group_id
-  kube_version      = "1.25.9"  
+  kube_version      = "1.26.4"  
   update_all_workers     = true
   wait_for_worker_update = true
-  depends_on = [ ibm_is_subnet.subnet4 ,data.ibm_container_vpc_cluster.cluster ,local.value1]
+  depends_on = [ ibm_is_subnet.subnet4 ,data.ibm_container_vpc_cluster.cluster ,local.previous]
   zones {
     subnet_id = ibm_is_subnet.subnet4.id
     name      = "us-south-1"
@@ -74,9 +93,27 @@ locals {
   # depends_on = [ data.ibm_container_vpc_cluster.cluster1 ]
   
 }
+data "ibm_container_vpc_cluster_worker" "worker1" {
+  for_each= toset(data.ibm_container_vpc_cluster.cluster1.workers)
+  worker_id = each.value
+  cluster_name_id = "testcluster1"
+  depends_on = [ ibm_container_vpc_cluster.cluster1 ]
+
+
+}
+
+locals {
+  depends_on = [ data.ibm_container_vpc_cluster_worker.worker1 ]
+  new = [
+    for i in data.ibm_container_vpc_cluster.cluster1.workers:
+    lookup(lookup(lookup(data.ibm_container_vpc_cluster_worker.worker1,i),"network_interfaces")[0],"ip_address")
+    
+  ]
+  
+}
 
 output "ip2" {
-  value = local.value2
+  value = local.new
   
   
   
@@ -87,7 +124,7 @@ locals {
   #   condition=local.value1==local.value2
   #   error_message="Please chane the ip_address in the bluefringe"
   # }
-  display=local.value1!=local.value2?1:0
+  display=local.previous!=local.new?1:0
 }
 output "display" {
   value = local.display
