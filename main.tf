@@ -103,7 +103,7 @@ data "ibm_container_vpc_cluster_worker" "worker1" {
 }
 
 locals {
-  depends_on = [ data.ibm_container_vpc_cluster_worker.worker1 ]
+  # depends_on = [ data.ibm_container_vpc_cluster_worker.worker1 ]
   new = [
     for i in data.ibm_container_vpc_cluster.cluster1.workers:
     lookup(lookup(lookup(data.ibm_container_vpc_cluster_worker.worker1,i),"network_interfaces")[0],"ip_address")
