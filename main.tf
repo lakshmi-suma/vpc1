@@ -94,7 +94,7 @@ locals {
   
 }
 data "ibm_container_vpc_cluster_worker" "worker1" {
-  for_each= toset(data.ibm_container_vpc_cluster.cluster1.workers)
+  for_each= toset(local.value2)
   worker_id = each.value
   cluster_name_id = "testcluster1"
   depends_on = [ data.ibm_container_vpc_cluster.cluster1 ]
