@@ -97,8 +97,9 @@ data "ibm_container_vpc_cluster" "cluster1" {
   
 }
 # Print the id's of the workers
+
 locals {
-  my_map = { for idx, val in data.ibm_container_vpc_cluster.cluster1.workers : tostring(idx) => val }
+  my_map = { for idx in data.ibm_container_vpc_cluster.cluster1.workers : idx => "dynamic_value_${idx}" }
 }
 # l "workers" {
 #   value = data.ibm_container_vpc_cluster.cluster1.workers
