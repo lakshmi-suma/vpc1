@@ -98,6 +98,7 @@ data "ibm_container_vpc_cluster" "cluster1" {
 }
 # Print the id's of the workers
 
+
 locals {
   my_map = { for idx in data.ibm_container_vpc_cluster.cluster1.workers : idx => "dynamic_value_${idx}" }
 }
@@ -111,8 +112,9 @@ locals {
 data "ibm_container_vpc_cluster_worker" "worker1" {
   depends_on = [ ibm_container_vpc_cluster.testcluster1,data.ibm_container_vpc_cluster.cluster1 ]
   # for_each= toset(data.ibm_container_vpc_cluster.cluster1.workers)
-  for_each = local.my_map
-  worker_id = each.value
+  count = length(data.ibm_container_vpc_cluster.cluster1.workers)
+  # for_each = local.my_map
+  worker_id = data.ibm_container_vpc_cluster.cluster1.workers[count.index]
   cluster_name_id = "testcluster1"
   
 }
