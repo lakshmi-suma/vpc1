@@ -90,26 +90,37 @@ resource "ibm_container_vpc_cluster" "testcluster1" {
     
   }
 }
+#To fetch information about the vpc cluster
 data "ibm_container_vpc_cluster" "cluster1" {
   name  = "testcluster1"
   depends_on = [ ibm_container_vpc_cluster.testcluster1 ]
   
 }
+# Print the id's of the workers
+output "workers" {
+  value = data.ibm_container_vpc_cluster.cluster1.workers
+  depends_on = [ data.ibm_container_vpc_cluster.testcluster1 ]
+  
+}
 
-
+#To fetch information about each worker node
 data "ibm_container_vpc_cluster_worker" "worker1" {
   for_each= toset(data.ibm_container_vpc_cluster.cluster1.workers)
   worker_id = each.value
   cluster_name_id = "testcluster1"
-  depends_on = [ ibm_container_vpc_cluster.testcluster1,data.ibm_container_vpc_cluster.cluster1 ]
-
-
-
+  depends_on = [ ibm_container_vpc_cluster.testcluster1 ]
 }
 
-locals {
-  # depends_on = [ data.ibm_container_vpc_cluster_worker.worker ]
-  new = [
+#To print the information about the workers
+# output "ip_address" {
+#   value=data.ibm_container_vpc_cluster_worker.worker1
+#   depends_on = [ data.ibm_container_vpc_cluster_worker.worker1 ]
+# }
+
+#To filter the ip address and store in a list
+output "ip" {
+  depends_on = [ data.ibm_container_vpc_cluster_worker.worker1 ]
+  value = [
     for i in data.ibm_container_vpc_cluster.cluster1.workers:
     lookup(lookup(lookup(data.ibm_container_vpc_cluster_worker.worker1,i),"network_interfaces")[0],"ip_address")
     
@@ -117,10 +128,11 @@ locals {
   
 }
 
-output "newips" {
-  value=local.new
-  
-}
+# data "ibm_container_vpc_cluster_worker" "worker2" {
+#   worker_id       = "kube-cgnsv2ud0jhkn4p263d0-testcluster-mywp-00000761"
+#   cluster_name_id = "test-cluster"
+#   depends_on = [ ibm_container_vpc_cluster.cluster ]
+# }
 
 
 # data "ibm_container_vpc_cluster" "cluster1" {
