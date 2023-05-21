@@ -25,7 +25,6 @@ resource "ibm_is_public_gateway" "gateway1" {
 resource "ibm_is_subnet_public_gateway_attachment" "subatt1" {
   subnet                = ibm_is_subnet.subnet4.id
   public_gateway         = ibm_is_public_gateway.gateway1.id
-  # resource_group_name=IaC-dev
 }
 
 # data "ibm_container_vpc_cluster" "cluster" {
@@ -71,7 +70,7 @@ resource "ibm_container_vpc_cluster" "testcluster1" {
   flavor            = "bx2.4x16"
   worker_count      = 2
   resource_group_id=var.resource_group_id
-  kube_version      = "1.26.4"  
+  kube_version      = "1.24.13"  
   update_all_workers     = true
   wait_for_worker_update = true
   depends_on = [ ibm_is_subnet.subnet4]
