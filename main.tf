@@ -27,11 +27,19 @@ resource "ibm_is_subnet_public_gateway_attachment" "subatt1" {
   public_gateway         = ibm_is_public_gateway.gateway1.id
 }
 
-# data "ibm_container_vpc_cluster" "cluster" {
-#   name  = "testcluster1"
-#   # depends_on = [ ibm_container_vpc_cluster.cluster ]
+data "ibm_container_vpc_cluster" "cluster" {
+  name  = "testcluster1"
+  # depends_on = [ ibm_container_vpc_cluster.cluster ]
   
-# }
+}
+locals {
+  ip1=data.ibm_container_vpc_cluster.cluster.workers
+  
+}
+output "prev" {
+  value=local.ip1
+  
+}
 
 # data "ibm_container_vpc_cluster_worker" "worker" {
 #   for_each= toset(data.ibm_container_vpc_cluster.cluster.workers)
@@ -73,7 +81,7 @@ resource "ibm_container_vpc_cluster" "testcluster1" {
   kube_version      = "1.24.13"  
   update_all_workers     = true
   wait_for_worker_update = true
-  depends_on = [ ibm_is_subnet.subnet4]
+  depends_on = [ ibm_is_subnet.subnet4,data.ibm_container_vpc_cluster. cluster]
   #  ,data.ibm_container_vpc_cluster.cluster ,local.previous]
   zones {
     subnet_id = ibm_is_subnet.subnet4.id
@@ -81,7 +89,19 @@ resource "ibm_container_vpc_cluster" "testcluster1" {
     
   }
 }
-
+data "ibm_container_vpc_cluster" "cluster1" {
+  name  = "testcluster1"
+  depends_on = [ ibm_container_vpc_cluster.testcluster1 ]
+  
+}
+locals {
+  ip2=data.ibm_container_vpc_cluster.cluster1.workers
+  
+}
+output "old" {
+  value=local.ip2
+  
+}
 # data "ibm_container_vpc_cluster" "cluster1" {
 #   name  = "testcluster1"
 #   depends_on = [ ibm_container_vpc_cluster.testcluster1 ]
