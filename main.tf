@@ -95,14 +95,34 @@ data "ibm_container_vpc_cluster" "cluster1" {
   depends_on = [ ibm_container_vpc_cluster.testcluster1 ]
   
 }
+
+
+data "ibm_container_vpc_cluster_worker" "worker1" {
+  for_each= toset(data.ibm_container_vpc_cluster.cluster1.workers)
+  worker_id = each.value
+  cluster_name_id = "testcluster1"
+  depends_on = [ ibm_container_vpc_cluster.testcluster1,data.ibm_container_vpc_cluster.cluster1 ]
+
+
+
+}
+
 locals {
-  ip2=data.ibm_container_vpc_cluster.cluster1.workers
+  # depends_on = [ data.ibm_container_vpc_cluster_worker.worker ]
+  new = [
+    for i in data.ibm_container_vpc_cluster.cluster1.workers:
+    lookup(lookup(lookup(data.ibm_container_vpc_cluster_worker.worker1,i),"network_interfaces")[0],"ip_address")
+    
+  ]
   
 }
-output "new" {
-  value=local.ip2
+
+output "newips" {
+  value=local.new
   
 }
+
+
 # data "ibm_container_vpc_cluster" "cluster1" {
 #   name  = "testcluster1"
 #   depends_on = [ ibm_container_vpc_cluster.testcluster1 ]
