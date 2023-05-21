@@ -27,11 +27,11 @@ resource "ibm_is_subnet_public_gateway_attachment" "subatt1" {
   public_gateway         = ibm_is_public_gateway.gateway1.id
 }
 
-data "ibm_container_vpc_cluster" "cluster" {
-  name  = "testcluster1"
-  # depends_on = [ ibm_container_vpc_cluster.cluster ]
+# data "ibm_container_vpc_cluster" "cluster" {
+#   name  = "testcluster1"
+#   # depends_on = [ ibm_container_vpc_cluster.cluster ]
   
-}
+# }
 
 resource "ibm_container_vpc_cluster" "cluster" {
   name              = "test-cluster1"
@@ -54,21 +54,21 @@ resource "ibm_container_vpc_cluster" "cluster" {
 
 
 #To fetch information about the vpc cluster
-data "ibm_container_vpc_cluster" "cluster" {
+data "ibm_container_vpc_cluster" "cluster1" {
   name  = "test-cluster1"
   depends_on = [ ibm_container_vpc_cluster.cluster ]
   
 }
 # Print the id's of the workers
 output "workers" {
-  value = data.ibm_container_vpc_cluster.cluster.workers
-  depends_on = [ data.ibm_container_vpc_cluster.cluster ]
+  value = data.ibm_container_vpc_cluster.cluster1.workers
+  depends_on = [ data.ibm_container_vpc_cluster.cluster1 ]
   
 }
 
 #To fetch information about each worker node
 data "ibm_container_vpc_cluster_worker" "worker1" {
-  for_each= toset(data.ibm_container_vpc_cluster.cluster.workers)
+  for_each= toset(data.ibm_container_vpc_cluster.cluster1.workers)
   worker_id = each.value
   cluster_name_id = "test-cluster1"
   depends_on = [ ibm_container_vpc_cluster.cluster ]
