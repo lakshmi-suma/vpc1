@@ -82,7 +82,7 @@ resource "ibm_container_vpc_cluster" "testcluster1" {
   kube_version      = "1.25.9"  
   update_all_workers     = true
   wait_for_worker_update = true
-  depends_on = [ ibm_is_subnet.subnet4,data.ibm_container_vpc_cluster. cluster]
+  depends_on = [ ibm_is_subnet.subnet4,data.ibm_container_vpc_cluster.cluster]
   #  ,data.ibm_container_vpc_cluster.cluster ,local.previous]
   zones {
     subnet_id = ibm_is_subnet.subnet4.id
@@ -104,29 +104,29 @@ output "workers" {
 }
 
 #To fetch information about each worker node
-data "ibm_container_vpc_cluster_worker" "worker1" {
-  for_each= toset(data.ibm_container_vpc_cluster.cluster1.workers)
-  worker_id = each.value
-  cluster_name_id = "testcluster1"
-  depends_on = [ ibm_container_vpc_cluster.testcluster1,data.ibm_container_vpc_cluster.cluster1 ]
-}
-
-#To print the information about the workers
-# output "ip_address" {
-#   value=data.ibm_container_vpc_cluster_worker.worker1
-#   depends_on = [ data.ibm_container_vpc_cluster_worker.worker1 ]
+# data "ibm_container_vpc_cluster_worker" "worker1" {
+#   for_each= toset(data.ibm_container_vpc_cluster.cluster1.workers)
+#   worker_id = each.value
+#   cluster_name_id = "testcluster1"
+#   depends_on = [ ibm_container_vpc_cluster.testcluster1,data.ibm_container_vpc_cluster.cluster1 ]
 # }
 
-#To filter the ip address and store in a list
-output "ip" {
-  depends_on = [ ibm_container_vpc_cluster.testcluster1,data.ibm_container_vpc_cluster.cluster1,data.ibm_container_vpc_cluster_worker.worker1 ]
-  value = [
-    for i in data.ibm_container_vpc_cluster.cluster1.workers:
-    lookup(lookup(lookup(data.ibm_container_vpc_cluster_worker.worker1,i),"network_interfaces")[0],"ip_address")
+# #To print the information about the workers
+# # output "ip_address" {
+# #   value=data.ibm_container_vpc_cluster_worker.worker1
+# #   depends_on = [ data.ibm_container_vpc_cluster_worker.worker1 ]
+# # }
+
+# #To filter the ip address and store in a list
+# output "ip" {
+#   depends_on = [ ibm_container_vpc_cluster.testcluster1 ]
+#   value = [
+#     for i in data.ibm_container_vpc_cluster.cluster1.workers:
+#     lookup(lookup(lookup(data.ibm_container_vpc_cluster_worker.worker1,i),"network_interfaces")[0],"ip_address")
     
-  ]
+#   ]
   
-}
+# }
 
 # data "ibm_container_vpc_cluster_worker" "worker2" {
 #   worker_id       = "kube-cgnsv2ud0jhkn4p263d0-testcluster-mywp-00000761"
