@@ -35,7 +35,7 @@ resource "ibm_is_subnet_public_gateway_attachment" "subatt1" {
 
 resource "ibm_container_vpc_cluster" "cluster" {
   name              = "test-cluster1"
-  vpc_id            = ibm_is_vpc.example.id
+  vpc_id            = ibm_is_vpc.vpc2.id
   flavor            = "bx2.4x16"
   worker_count      = 2
   resource_group_id=var.resource_group_id
