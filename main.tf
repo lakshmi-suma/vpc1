@@ -98,7 +98,7 @@ locals {
   ip2=data.ibm_container_vpc_cluster.cluster1.workers
   
 }
-output "old" {
+output "new" {
   value=local.ip2
   
 }
