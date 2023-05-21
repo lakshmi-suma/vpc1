@@ -32,33 +32,34 @@ data "ibm_container_vpc_cluster" "cluster" {
   # depends_on = [ ibm_container_vpc_cluster.cluster ]
   
 }
+
+
+data "ibm_container_vpc_cluster_worker" "worker" {
+  for_each= toset(data.ibm_container_vpc_cluster.cluster.workers)
+  worker_id = each.value
+  cluster_name_id = "testcluster1"
+  depends_on = [ data.ibm_container_vpc_cluster.cluster ]
+
+
+}
+
 locals {
-  ip1=data.ibm_container_vpc_cluster.cluster.workers
-  
-}
-output "prev" {
-  value=local.ip1
-  
-}
-
-# data "ibm_container_vpc_cluster_worker" "worker" {
-#   for_each= toset(data.ibm_container_vpc_cluster.cluster.workers)
-#   worker_id = each.value
-#   cluster_name_id = "testcluster1"
-#   depends_on = [ data.ibm_container_vpc_cluster.cluster ]
-
-
-# }
-
-# locals {
-#   depends_on = [ data.ibm_container_vpc_cluster_worker.worker ]
-#   previous = [
-#     for i in data.ibm_container_vpc_cluster.cluster.workers:
-#     lookup(lookup(lookup(data.ibm_container_vpc_cluster_worker.worker,i),"network_interfaces")[0],"ip_address")
+  # depends_on = [ data.ibm_container_vpc_cluster_worker.worker ]
+  previous = [
+    for i in data.ibm_container_vpc_cluster.cluster.workers:
+    lookup(lookup(lookup(data.ibm_container_vpc_cluster_worker.worker,i),"network_interfaces")[0],"ip_address")
     
-#   ]
+  ]
+  
+}
+# locals {
+#   ip1=data.ibm_container_vpc_cluster.cluster.workers
   
 # }
+output "prev" {
+  value=local.previous
+  
+}
 # # Print the id's of the workers
 # # locals  {
 # #   value1 = data.ibm_container_vpc_cluster.cluster.workers
