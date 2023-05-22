@@ -71,12 +71,14 @@ locals  {
   # depends_on = [ data.ibm_container_vpc_cluster.cluster1 ]
   
 }
-locals {
+output "print" {
   validation{
     condition=local.value1==local.value2
     error_message="Please change the ip address"
   }
+  
 }
+
 # output "print" {
 #   value = local.value1!=local.value2?
   
