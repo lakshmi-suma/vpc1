@@ -70,11 +70,11 @@ locals {
   ids=data.ibm_container_vpc_cluster.cluster1.workers
 }
 
-# variable "a"{
+variable "a"{
 
-#   type=list()
-#   default=data.ibm_container_vpc_cluster.cluster1.workers
-# }
+  type=list()
+  default=data.ibm_container_vpc_cluster.cluster1.workers
+}
 
 # module "ip" {
 #   source = "./modules"
@@ -87,7 +87,7 @@ data "ibm_container_vpc_cluster_worker" "worker1" {
   # count = length(local.ids)
   # # name               = "diag-rule"
   # worker_id = local.ids[count.index]
-  for_each= local.ids
+  for_each= var.a
   worker_id = each.value
   cluster_name_id = "test-cluster1"
   depends_on = [ ibm_container_vpc_cluster.cluster5]
