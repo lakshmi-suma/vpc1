@@ -39,7 +39,7 @@ resource "ibm_container_vpc_cluster" "cluster5" {
   flavor            = "bx2.4x16"
   worker_count      = 2
   resource_group_id=var.resource_group_id
-  kube_version      = "1.25.9"  
+  kube_version      = "1.24.13"  
   update_all_workers     = true
   wait_for_worker_update = true
   depends_on = [ ibm_is_subnet.subnet4 ]
@@ -83,7 +83,7 @@ data "ibm_container_vpc_cluster_worker" "worker1" {
   # count = length(local.ids)
   # # name               = "diag-rule"
   # worker_id = local.ids[count.index]
-  for_each= var.a
+  for_each= local.ids
   worker_id = each.value
   cluster_name_id = "test-cluster1"
   depends_on = [ ibm_container_vpc_cluster.cluster5]
