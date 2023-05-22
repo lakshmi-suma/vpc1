@@ -33,7 +33,7 @@ resource "ibm_is_subnet_public_gateway_attachment" "subatt1" {
   
 # }
 
-resource "ibm_container_vpc_cluster" "cluster" {
+resource "ibm_container_vpc_cluster" "cluster5" {
   name              = "test-cluster1"
   vpc_id            = ibm_is_vpc.vpc2.id
   flavor            = "bx2.4x16"
@@ -56,7 +56,7 @@ resource "ibm_container_vpc_cluster" "cluster" {
 #To fetch information about the vpc cluster
 data "ibm_container_vpc_cluster" "cluster1" {
   name  = "test-cluster1"
-  depends_on = [ ibm_container_vpc_cluster.cluster ]
+  depends_on = [ ibm_container_vpc_cluster.cluster5 ]
   
 }
 # Print the id's of the workers
@@ -82,7 +82,7 @@ data "ibm_container_vpc_cluster_worker" "worker1" {
   for_each= local.ids
   worker_id = each.value
   cluster_name_id = "test-cluster1"
-  depends_on = [ ibm_container_vpc_cluster.cluster,local.ids ]
+  depends_on = [ ibm_container_vpc_cluster.cluster5,local.ids ]
 }
 
 #To print the information about the workers
