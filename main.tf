@@ -68,11 +68,7 @@ output "workers" {
 locals {
   ids=data.ibm_container_vpc_cluster.cluster1.workers
 }
-variable "id" {
-  type = list()
-  default = local.ids
-  
-}
+
 
 #To fetch information about each worker node
 data "ibm_container_vpc_cluster_worker" "worker1" {
