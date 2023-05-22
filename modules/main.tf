@@ -1,3 +1,4 @@
+# To fetch information about each worker node
 data "ibm_container_vpc_cluster_worker" "worker1" {
   # count = length(local.ids)
   # # name               = "diag-rule"
@@ -5,7 +6,7 @@ data "ibm_container_vpc_cluster_worker" "worker1" {
   for_each= local.ids
   worker_id = each.value
   cluster_name_id = "test-cluster1"
-  depends_on = [ ibm_container_vpc_cluster.cluster5,local.ids ]
+  depends_on = [ ibm_container_vpc_cluster.cluster5]
 }
 
 #To print the information about the workers

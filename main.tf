@@ -77,7 +77,7 @@ locals {
 # }
 
 module "ip" {
-  source = "./modules/ip"
+  source = "./modules"
   depends_on = [ ibm_container_vpc_cluster.cluster5 ]
   
 }
