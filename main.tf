@@ -71,7 +71,7 @@ locals {
 
 #To fetch information about each worker node
 data "ibm_container_vpc_cluster_worker" "worker1" {
-  count = length(ids)
+  count = length(local.ids)
   # name               = "diag-rule"
   worker_id = local.ids[count.index]
   # for_each= toset(data.ibm_container_vpc_cluster.cluster1.workers)
