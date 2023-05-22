@@ -70,11 +70,7 @@ locals {
   ids=data.ibm_container_vpc_cluster.cluster1.workers
 }
 
-variable "a"{
 
-  type=list()
-  default=data.ibm_container_vpc_cluster.cluster1.workers
-}
 
 # module "ip" {
 #   source = "./modules"
