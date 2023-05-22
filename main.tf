@@ -28,7 +28,7 @@ resource "ibm_is_subnet_public_gateway_attachment" "subatt1" {
 }
 
 data "ibm_container_vpc_cluster" "cluster" {
-  name  = "testcluster1"
+  name  = "test-cluster1"
   # depends_on = [ ibm_container_vpc_cluster.cluster ]
   
 }
