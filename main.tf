@@ -33,7 +33,7 @@ data "ibm_container_vpc_cluster" "cluster" {
   
 }
 locals {
-  value1= data.ibm_container_vpc_cluster.cluster1.workers
+  value1= data.ibm_container_vpc_cluster.cluster.workers
   # depends_on = [ data.ibm_container_vpc_cluster.cluster ]
   
 }
@@ -45,10 +45,10 @@ resource "ibm_container_vpc_cluster" "cluster5" {
   flavor            = "bx2.4x16"
   worker_count      = 2
   resource_group_id=var.resource_group_id
-  kube_version      = "1.25.9"  
+  kube_version      = "1.26.4"  
   update_all_workers     = true
   wait_for_worker_update = true
-  depends_on = [ ibm_is_subnet.subnet4 ]
+  depends_on = [ ibm_is_subnet.subnet4,data.ibm_container_vpc_cluster.cluster ]
   zones {
     subnet_id = ibm_is_subnet.subnet4.id
     name      = "us-south-1"
