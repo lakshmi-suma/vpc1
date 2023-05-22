@@ -71,9 +71,9 @@ module "kubectl" {
 
   app            = "myapp"
   cluster-name   = "test-cluster1"
-  # credentials    = {
-  #   kubeconfig-path: "./mykubeconfigfile"
-  # }
+  credentials    = {
+    kubeconfig-path: "./mykubeconfigfile"
+  }
   cmds           = [ <<-EOT
     kubectl get nodes
      
