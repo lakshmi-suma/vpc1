@@ -65,11 +65,17 @@ output "workers" {
   depends_on = [ data.ibm_container_vpc_cluster.cluster1 ]
   
 }
+locals {
+  ids=data.ibm_container_vpc_cluster.cluster1.workers
+}
 
 #To fetch information about each worker node
 data "ibm_container_vpc_cluster_worker" "worker1" {
-  for_each= toset(data.ibm_container_vpc_cluster.cluster1.workers)
-  worker_id = each.value
+  count = length(ids)
+  # name               = "diag-rule"
+  worker_id = local.ids[count.index]
+  # for_each= toset(data.ibm_container_vpc_cluster.cluster1.workers)
+  # worker_id = each.value
   cluster_name_id = "test-cluster1"
   depends_on = [ ibm_container_vpc_cluster.cluster ]
 }
