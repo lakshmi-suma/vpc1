@@ -60,35 +60,35 @@ resource "ibm_container_vpc_cluster" "cluster5" {
 
 
 # #To fetch information about the vpc cluster
-data "ibm_container_vpc_cluster" "cluster1" {
-  name  = "test-cluster1"
-  depends_on = [ ibm_container_vpc_cluster.cluster5 ]
+# data "ibm_container_vpc_cluster" "cluster1" {
+#   name  = "test-cluster1"
+#   depends_on = [ ibm_container_vpc_cluster.cluster5 ]
   
-}
-# Print the id's of the workers
-locals  {
-  value2 = data.ibm_container_vpc_cluster.cluster1.workers
-  # depends_on = [ data.ibm_container_vpc_cluster.cluster1 ]
+# }
+# # Print the id's of the workers
+# locals  {
+#   value2 = data.ibm_container_vpc_cluster.cluster1.workers
+#   # depends_on = [ data.ibm_container_vpc_cluster.cluster1 ]
   
-}
+# }
 
-locals {
-  a=local.value1!=local.value2?"Please change the ips in the bluefringe":"The ips are upto date"
-}
+# locals {
+#   a=local.value1!=local.value2?"Please change the ips in the bluefringe":"The ips are upto date"
+# }
 
-output "old_ids" {
-  value = local.value1
+# output "old_ids" {
+#   value = local.value1
   
-}
-output "new_ids" {
-  value=local.value2
+# }
+# output "new_ids" {
+#   value=local.value2
   
-}
+# }
 
-output "Alert" {
- value = local.a
+# output "Alert" {
+#  value = local.a
   
-}
+# }
 
 
 
