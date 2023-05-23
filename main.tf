@@ -27,16 +27,16 @@ resource "ibm_is_subnet_public_gateway_attachment" "subatt1" {
   public_gateway         = ibm_is_public_gateway.gateway1.id
 }
 
-data "ibm_container_vpc_cluster" "cluster" {
-  name  = "test-cluster1"
-  # depends_on = [ ibm_container_vpc_cluster.cluster ]
+# data "ibm_container_vpc_cluster" "cluster" {
+#   name  = "test-cluster1"
+#   # depends_on = [ ibm_container_vpc_cluster.cluster ]
   
-}
-locals {
-  value1= data.ibm_container_vpc_cluster.cluster.workers
-  # depends_on = [ data.ibm_container_vpc_cluster.cluster ]
+# }
+# locals {
+#   value1= data.ibm_container_vpc_cluster.cluster.workers
+#   # depends_on = [ data.ibm_container_vpc_cluster.cluster ]
   
-}
+# }
 
 
 resource "ibm_container_vpc_cluster" "cluster5" {
