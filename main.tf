@@ -38,6 +38,13 @@ locals {
   
 }
 
+data "kubernetes_nodes" "example" {
+  metadata {
+    name="00000560"
+  }
+}
+
+
 
 resource "ibm_container_vpc_cluster" "cluster5" {
   name              = "test-cluster1"
